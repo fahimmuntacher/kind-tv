@@ -4,8 +4,19 @@ import StatCard from "../components/Dashboard/StatCard";
 import SystemHealthCard from "../components/Dashboard/SystemHealthCard";
 import LiveBroadcastCard from "../components/Dashboard/LiveBroadcastCard";
 import RecentActivityCard from "../components/Dashboard/RecentActivityCard";
+import {
+  UserEngagementBarChart,
+} from "../components/Dashboard/UserEngagementHeatmapCard";
 
 const AdminPanel = () => {
+  const sampleData = [
+    { name: "Bangladesh", value: 85 },
+    { name: "India", value: 72 },
+    { name: "USA", value: 65 },
+    { name: "UK", value: 40 },
+    { name: "Canada", value: 30 },
+    { name: "Australia", value: 55 },
+  ];
   return (
     <DashBoardLayout panelName="Dashboard">
       {/* Card */}
@@ -77,6 +88,14 @@ const AdminPanel = () => {
               status: "Online",
             },
           ]}
+        />
+      </div>
+
+      {/* user heatmap  */}
+      <div className="mt-8">
+        <UserEngagementBarChart
+          data={sampleData}
+          title="User Engagement by Region"
         />
       </div>
 

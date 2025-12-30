@@ -12,9 +12,9 @@ import { Menu, X } from "lucide-react";
 /* ---------------- Sidebar Routes ---------------- */
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Channel Management", href: "/dashboard/channels" },
-  { label: "Content Scheduling", href: "/dashboard/scheduling" },
-  { label: "Content Library", href: "/dashboard/library" },
+  { label: "Channel Management", href: "/dashboard/channel-management" },
+  { label: "Content Scheduling", href: "/dashboard/content-scheduling" },
+  { label: "Content Library", href: "/dashboard/content-library" },
 ];
 
 const SYSTEM_ITEMS = [
