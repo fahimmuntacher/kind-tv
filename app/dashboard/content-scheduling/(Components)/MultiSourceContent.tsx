@@ -22,6 +22,7 @@ type ContentItem = {
   id: string;
   source: "YouTube" | "Vimeo" | "Upload" | "Google Drive" | "Dropbox" | "RSS";
   title: string;
+  videoLink: string;
   description: string;
   thumbnail: string;
   scheduledDate?: string;
@@ -42,8 +43,9 @@ export default function ContentScheduler() {
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState<ContentItem | null>(null);
 
-  const [form, setForm] = useState({
-    source: "YouTube" as ContentItem["source"],
+  // FIX: Explicitly type the form as Omit<ContentItem, "id"> to allow string fallbacks
+  const [form, setForm] = useState<Omit<ContentItem, "id">>({
+    source: "YouTube",
     title: "",
     videoLink: "",
     description: "",
@@ -63,7 +65,13 @@ export default function ContentScheduler() {
   const openModal = (item?: ContentItem) => {
     if (item) {
       setEditingItem(item);
-      setForm(item);
+      // FIX: Destructure id and provide fallback strings to prevent "undefined" errors
+      const { id, ...formData } = item;
+      setForm({
+        ...formData,
+        scheduledDate: formData.scheduledDate ?? dayjs().format("YYYY-MM-DD"),
+        scheduledTime: formData.scheduledTime ?? dayjs().format("HH:mm"),
+      });
     } else {
       setEditingItem(null);
       setForm({
@@ -85,7 +93,7 @@ export default function ContentScheduler() {
         items.map((i) => (i.id === editingItem.id ? { ...form, id: i.id } : i))
       );
     } else {
-      setItems([...items, { ...form, id: (items.length + 1).toString() }]);
+      setItems([...items, { ...form, id: Date.now().toString() }]);
     }
     setShowModal(false);
   };
@@ -94,7 +102,6 @@ export default function ContentScheduler() {
 
   return (
     <div className="p-4 sm:p-6 bg-gray-50 rounded-2xl shadow-sm border border-gray-200">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-700">
           Content Scheduling
@@ -107,7 +114,6 @@ export default function ContentScheduler() {
         </button>
       </div>
 
-      {/* Drag & Drop Grid */}
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="contentCalendar">
           {(provided) => (
@@ -126,12 +132,10 @@ export default function ContentScheduler() {
                         snapshot.isDragging ? "border-indigo-300 border-2" : ""
                       }`}
                     >
-                      {/* Thumbnail responsive */}
                       <div className="w-full aspect-video flex items-center justify-center bg-gradient-to-br from-indigo-400 to-purple-500 text-3xl sm:text-4xl text-white">
                         {item.thumbnail}
                       </div>
 
-                      {/* Content Info */}
                       <div className="p-4 flex-1 flex flex-col justify-between">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2 sm:gap-0">
                           <span className="flex items-center gap-2 font-semibold text-gray-700 text-sm sm:text-base">
@@ -157,7 +161,6 @@ export default function ContentScheduler() {
                         </p>
                       </div>
 
-                      {/* Drag Handle */}
                       <div
                         {...provided.dragHandleProps}
                         className="p-2 cursor-grab text-gray-400 flex justify-end"
@@ -174,7 +177,6 @@ export default function ContentScheduler() {
         </Droppable>
       </DragDropContext>
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full">
@@ -183,7 +185,6 @@ export default function ContentScheduler() {
                 {editingItem ? "Edit Content" : "Add New Content"}
               </h3>
             </div>
-
             <div className="p-6 space-y-4 flex flex-col">
               <input
                 className="w-full px-4 py-2 border rounded-lg"
@@ -201,7 +202,7 @@ export default function ContentScheduler() {
               />
               <input
                 className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Thumbnail Emoji or URL"
+                placeholder="Thumbnail"
                 value={form.thumbnail}
                 onChange={(e) =>
                   setForm({ ...form, thumbnail: e.target.value })
@@ -209,7 +210,7 @@ export default function ContentScheduler() {
               />
               <input
                 className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Your video URL"
+                placeholder="Video URL"
                 value={form.videoLink}
                 onChange={(e) =>
                   setForm({ ...form, videoLink: e.target.value })
@@ -255,7 +256,6 @@ export default function ContentScheduler() {
                 }
               />
             </div>
-
             <div className="p-6 border-t flex flex-col sm:flex-row justify-end gap-3">
               <button
                 onClick={() => setShowModal(false)}

@@ -2,12 +2,16 @@ import React from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-const PageLayouts = ({ children }) => {
+interface PageLayoutsProps {
+  children: React.ReactNode;
+}
+
+const PageLayouts = ({ children }: PageLayoutsProps) => {
   return (
     <>
-      <Navbar></Navbar>
-      <div>{children}</div>
-      <Footer></Footer>
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
     </>
   );
 };
