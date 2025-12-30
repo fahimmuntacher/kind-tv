@@ -67,9 +67,9 @@ export default function ChannelManagementUI() {
 
   return (
     <DashBoardLayout panelName="Channel Management">
-      <div className="bg-gradient-to-br from-slate-50 to-slate-100">
-        {/* stats card */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="space-y-8">
+        {/* Stats Cards - Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <StatCard
             title="Total Channels"
             value={12}
@@ -100,17 +100,18 @@ export default function ChannelManagementUI() {
           />
         </div>
 
-        <div className="mb-8">
+        {/* Top Channels Chart */}
+        <div>
           <TopChannelsChart data={topChannelsData} />
         </div>
 
         {/* Channels List */}
         <Card className="border-0 shadow-sm">
-          <CardHeader className="flex flex-row justify-between items-center">
-            <CardTitle>All Channels</CardTitle>
+          <CardHeader className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <CardTitle className="text-xl sm:text-2xl">All Channels</CardTitle>
             <button
               onClick={() => setShowModal(true)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg shadow-indigo-200 transition"
+              className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-lg font-medium shadow-lg shadow-indigo-200 transition w-full sm:w-auto"
             >
               <Plus size={20} />
               Create Channel
@@ -121,48 +122,52 @@ export default function ChannelManagementUI() {
             {channels.map((channel) => (
               <div
                 key={channel.id}
-                className="flex justify-between items-center p-4 rounded-xl border bg-white"
+                className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-4 rounded-xl border bg-white"
               >
                 <div className="flex gap-4 flex-1">
-                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl text-white">
+                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl text-white flex-shrink-0">
                     {channel.emoji}
                   </div>
 
-                  <div>
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-semibold text-lg">{channel.name}</h3>
-                      <span className="px-3 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-lg truncate">{channel.name}</h3>
+                      <span className="px-3 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700 whitespace-nowrap">
                         {channel.status}
                       </span>
-                      <span className="px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700">
+                      <span className="px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 whitespace-nowrap">
                         {channel.ageRating}
                       </span>
                     </div>
 
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-slate-600 line-clamp-2 mb-2">
                       {channel.description}
                     </p>
 
-                    <div className="flex gap-4 text-xs text-slate-500 mt-2">
-                      <span>📁 {channel.category}</span>
-                      <span className="flex items-center gap-1">
+                    <div className="flex flex-wrap gap-3 text-xs text-slate-500">
+                      <span className="truncate">📁 {channel.category}</span>
+                      <span className="flex items-center gap-1 whitespace-nowrap">
                         <Clock size={12} /> {channel.broadcastTime}
                       </span>
-                      <span className="flex items-center gap-1">
+                      <span className="flex items-center gap-1 whitespace-nowrap">
                         <Globe size={12} /> {channel.timezone}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 justify-end sm:justify-start">
                   <button
                     onClick={() => openEditModal(channel)}
-                    className="p-2 text-indigo-600 rounded-lg hover:bg-indigo-50"
+                    className="p-2.5 text-indigo-600 rounded-lg hover:bg-indigo-50 transition"
+                    aria-label="Edit channel"
                   >
                     <Edit2 size={18} />
                   </button>
-                  <button className="p-2 text-red-600 rounded-lg hover:bg-red-50">
+                  <button
+                    className="p-2.5 text-red-600 rounded-lg hover:bg-red-50 transition"
+                    aria-label="Delete channel"
+                  >
                     <Trash2 size={18} />
                   </button>
                 </div>
@@ -171,66 +176,73 @@ export default function ChannelManagementUI() {
           </CardContent>
         </Card>
 
-        {/* Modal (UI only) */}
+        {/* Modal - Fully Responsive */}
         {showModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-8">
               <div className="p-6 border-b">
-                <h2 className="text-2xl font-bold">
+                <h2 className="text-2xl font-bold text-center sm:text-left">
                   {editingChannel ? "Edit Channel" : "Create New Channel"}
                 </h2>
               </div>
 
               <div className="p-6 space-y-4">
                 <input
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Channel Name"
                   defaultValue={editingChannel?.name || ""}
                 />
                 <textarea
-                  className="w-full px-4 py-2 border rounded-lg"
+                  rows={3}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
                   placeholder="Description"
                   defaultValue={editingChannel?.description || ""}
                 />
                 <input
-                  className="w-full px-4 py-2 border rounded-lg"
-                  placeholder="Thumbnail Emoji"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Thumbnail Emoji (e.g. 🎬)"
                   defaultValue={editingChannel?.emoji || ""}
                 />
                 <select
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   defaultValue={editingChannel?.category || ""}
                 >
+                  <option value="">Select Category</option>
                   <option>Sports</option>
                   <option>Entertainment</option>
                   <option>News</option>
+                  <option>Kids</option>
                 </select>
                 <select
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   defaultValue={editingChannel?.ageRating || ""}
                 >
+                  <option value="">Select Age Rating</option>
                   <option>R</option>
                   <option>PG-13</option>
+                  <option>PG</option>
                   <option>G</option>
                 </select>
                 <select
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   defaultValue={editingChannel?.timezone || ""}
                 >
+                  <option value="">Select Timezone</option>
                   <option>UTC+6</option>
                   <option>UTC+0</option>
                   <option>UTC-5</option>
+                  <option>UTC-8</option>
                 </select>
               </div>
 
-              <div className="p-6 border-t flex justify-end gap-3">
+              <div className="p-6 border-t flex flex-col sm:flex-row justify-end gap-3">
                 <button
                   onClick={closeModal}
-                  className="px-6 py-2 border rounded-lg"
+                  className="w-full sm:w-auto px-6 py-3 border rounded-lg hover:bg-gray-50 transition"
                 >
                   Cancel
                 </button>
-                <button className="px-6 py-2 bg-indigo-600 text-white rounded-lg">
+                <button className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
                   {editingChannel ? "Save Changes" : "Create Channel"}
                 </button>
               </div>
