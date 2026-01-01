@@ -2,109 +2,76 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Youtube, Video, UploadCloud } from "lucide-react";
+import clsx from "clsx";
 
-/* =======================
-   Types
-======================= */
+/* ======================= Types ======================= */
 
-export type VideoMetadata = {
-  id: string;
+type VideoSource = "custom" | "youtube" | "vimeo";
+
+type FormValues = {
   title: string;
   description: string;
-  duration: string;
-  source: "YouTube" | "Vimeo" | "Upload";
-  thumbnail: string;
+  videoUrl: string;
 };
 
-type Props = {
-  video?: VideoMetadata;
-  onSave?: (video: VideoMetadata) => void;
-};
+/* ======================= Component ======================= */
 
-/* =======================
-   Defaults
-======================= */
+export default function VideoAddSection() {
+  const [source, setSource] = useState<VideoSource>("custom");
+  const [thumbnail, setThumbnail] = useState("/placeholder.png");
 
-const EMPTY_VIDEO: VideoMetadata = {
-  id: "",
-  title: "",
-  description: "",
-  duration: "",
-  source: "YouTube",
-  thumbnail: "/placeholder.png",
-};
-
-/* =======================
-   Component
-======================= */
-
-export default function VideoMetadataCard({ video, onSave }: Props) {
-  const [metadata, setMetadata] = useState<VideoMetadata>(() => ({
-    ...EMPTY_VIDEO,
-    ...video,
-    id: video?.id ?? crypto.randomUUID(),
-  }));
-
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  const handleChange = (field: keyof VideoMetadata, value: string) => {
-    setMetadata((prev) => ({ ...prev, [field]: value }));
-  };
+  const { register, handleSubmit, reset } = useForm<FormValues>();
 
   const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-
-    setMetadata((prev) => ({
-      ...prev,
-      thumbnail: url,
-    }));
+    setThumbnail(URL.createObjectURL(file));
   };
 
-  // Cleanup preview URL (important)
+  const onSubmit = (data: FormValues) => {
+    console.log({
+      source,
+      thumbnail,
+      ...data,
+    });
+  };
+
   useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
-  }, [previewUrl]);
+    reset();
+  }, [source, reset]);
 
   return (
-    <Card className="w-full rounded-2xl border shadow-sm transition">
+    <Card className="rounded-3xl border shadow-lg overflow-hidden">
       {/* Header */}
-      <CardHeader className="rounded-t-2xl bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 text-white">
-        <CardTitle className="text-lg font-semibold tracking-wide">
-          🎬 Video Metadata
+      <CardHeader className="bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 text-white">
+        <CardTitle className="text-xl font-semibold">
+          🎬 Add Video Content
         </CardTitle>
-        <p className="text-xs opacity-90">
-          Video ID:{" "}
-          <span className="font-mono bg-white/10 px-2 py-0.5 rounded">
-            {metadata.id}
-          </span>
+        <p className="text-sm font-semibold opacity-90 max-w-lg">
+          Upload your own video or connect YouTube / Vimeo links for instant
+          publishing
         </p>
       </CardHeader>
 
-      {/* Form */}
-      <CardContent className="p-6 space-y-6">
-        {/* Thumbnail */}
-        <div className="space-y-2">
-          <Label>Thumbnail</Label>
+      <CardContent className="p-8 space-y-10">
+        {/* Thumbnail Section */}
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">Video Thumbnail</Label>
 
-          <div className="flex items-center gap-4">
-            <div className="relative w-32 h-20 rounded-xl overflow-hidden border bg-muted">
+          <div className="flex items-center gap-6 flex-wrap">
+            <div className="relative w-52 h-32 rounded-2xl overflow-hidden border bg-muted shadow-inner">
               <Image
-                src={metadata.thumbnail || "/placeholder.png"}
+                src={thumbnail}
                 alt="Thumbnail preview"
                 fill
                 className="object-cover"
-                sizes="128px"
               />
             </div>
 
@@ -112,72 +79,137 @@ export default function VideoMetadataCard({ video, onSave }: Props) {
               type="file"
               accept="image/*"
               onChange={handleThumbnailUpload}
-              className="max-w-xs cursor-pointer"
+              className="max-w-xs"
             />
           </div>
         </div>
 
-        {/* Title */}
-        <div className="space-y-1">
-          <Label>Title</Label>
-          <Input
-            placeholder="Enter video title"
-            value={metadata.title}
-            onChange={(e) => handleChange("title", e.target.value)}
-          />
-        </div>
+        {/* Source Selector */}
+        <div className="space-y-10">
+          <Label className="text-sm font-semibold">Video Source</Label>
 
-        {/* Description */}
-        <div className="space-y-1">
-          <Label>Description</Label>
-          <Textarea
-            placeholder="Enter video description"
-            value={metadata.description}
-            rows={4}
-            onChange={(e) => handleChange("description", e.target.value)}
-          />
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <SourceCard
+              active={source === "custom"}
+              icon={<UploadCloud />}
+              label="Custom Upload"
+              description="Manually add video details"
+              onClick={() => setSource("custom")}
+            />
 
-        {/* Duration + Source */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <Label>Duration (mm:ss)</Label>
-            <Input
-              placeholder="02:30"
-              value={metadata.duration}
-              onChange={(e) => handleChange("duration", e.target.value)}
+            <SourceCard
+              active={source === "youtube"}
+              icon={<Youtube />}
+              label="YouTube"
+              description="Paste a YouTube video link"
+              onClick={() => setSource("youtube")}
+            />
+
+            <SourceCard
+              active={source === "vimeo"}
+              icon={<Video />}
+              label="Vimeo"
+              description="Import video from Vimeo"
+              onClick={() => setSource("vimeo")}
             />
           </div>
+        </div>
 
-          <div className="space-y-1">
-            <Label>Source</Label>
-            <select
-              className="w-full rounded-lg border px-3 py-2 bg-background"
-              value={metadata.source}
-              onChange={(e) =>
-                handleChange(
-                  "source",
-                  e.target.value as VideoMetadata["source"]
-                )
-              }
-            >
-              <option value="YouTube">YouTube</option>
-              <option value="Vimeo">Vimeo</option>
-              <option value="Upload">Upload</option>
-            </select>
+        {/* Form Area */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="rounded-2xl border bg-muted/40 p-6 space-y-6"
+        >
+          {/* YouTube / Vimeo */}
+          {(source === "youtube" || source === "vimeo") && (
+            <div className="space-y-2">
+              <Label>
+                {source === "youtube" ? "YouTube Video URL" : "Vimeo Video URL"}
+              </Label>
+
+              <div className="flex gap-3">
+                <Input
+                  placeholder="https://..."
+                  {...register("videoUrl", { required: true })}
+                />
+                <Button type="button" variant="secondary" className="cursor-pointer">
+                  Fetch
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Custom */}
+          {source === "custom" && (
+            <>
+              <div className="space-y-1">
+                <Label>Title</Label>
+                <Input
+                  placeholder="Enter video title"
+                  {...register("title", { required: true })}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label>Description</Label>
+                <Textarea
+                  rows={4}
+                  placeholder="Brief description about the video"
+                  {...register("description")}
+                />
+              </div>
+            </>
+          )}
+
+          <div className="flex justify-end pt-2">
+            <Button className="px-10 h-11 rounded-xl bg-black text-white cursor-pointer">
+              Save Video
+            </Button>
           </div>
-        </div>
-
-        {/* Save */}
-        <div className="flex justify-end pt-2">
-          <Button
-            className="px-6 bg-black"
-            onClick={() => onSave?.(metadata)}
-          >
-            Save Metadata
-          </Button>
-        </div>
+        </form>
       </CardContent>
     </Card>
+  );
+}
+
+/* ======================= Source Card ======================= */
+
+function SourceCard({
+  active,
+  icon,
+  label,
+  description,
+  onClick,
+}: {
+  active: boolean;
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={clsx(
+        "text-left rounded-2xl border p-5 transition-all",
+        "hover:shadow-md",
+        active
+          ? "bg-white border-indigo-500 ring-2 ring-indigo-500/30 shadow-lg"
+          : "bg-white/60 text-muted-foreground"
+      )}
+    >
+      <div
+        className={clsx(
+          "mb-3 w-8 h-8",
+          active ? "text-indigo-600" : "text-gray-400"
+        )}
+      >
+        {icon}
+      </div>
+
+      <h4 className="font-medium text-sm">{label}</h4>
+      <p className="text-xs mt-1 opacity-80">{description}</p>
+    </button>
   );
 }

@@ -13,8 +13,8 @@ import { Menu, X } from "lucide-react";
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Channel Management", href: "/dashboard/channel-management" },
-  { label: "Content Scheduling", href: "/dashboard/content-scheduling" },
   { label: "Content Library", href: "/dashboard/content-library" },
+  { label: "Content Scheduling", href: "/dashboard/content-scheduling" },
 ];
 
 const SYSTEM_ITEMS = [
@@ -69,7 +69,7 @@ const DashBoardLayout = ({ children , panelName }: DashboardLayoutProps) => {
         </div>
 
         {/* Logo */}
-        <div className="mb-6 flex items-center gap-2">
+        <div className="mb-6 flex items-center">
           <span className="text-3xl">🌈</span>
           <div>
             <p className="text-xl font-bold text-slate-800">Kind Children</p>

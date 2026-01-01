@@ -1,7 +1,7 @@
 import DashBoardLayout from "@/app/layouts/DashBoardLayout";
 import React from "react";
 import MultiSourceContent from "./(Components)/MultiSourceContent";
-import AnalyticsSuggestions from "./(Components)/AnalyticsSuggestions";
+
 import RecurringScheduleCard from "./(Components)/Recurring";
 
 const ContentScheduling = () => {
