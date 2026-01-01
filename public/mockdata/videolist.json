@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "title": "Introduction to React",
+    "thumbnail": "/thumbnail.jpg"
+  },
+  {
+    "id": "2",
+    "title": "React Hooks Explained",
+    "thumbnail": "/thumbnail.jpg"
+  },
+  {
+    "id": "3",
+    "title": "Building UI with Tailwind",
+    "thumbnail": "/thumbnail.jpg"
+  },
+  {
+    "id": "4",
+    "title": "Next.js App Router Basics",
+    "thumbnail": "/thumbnail.jpg"
+  }
+]
