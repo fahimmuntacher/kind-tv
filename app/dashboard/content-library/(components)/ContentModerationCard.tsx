@@ -3,7 +3,6 @@
 import React from "react";
 import ContentModerationTable, {
   ContentItem,
-  ModerationStatus,
 } from "./ContentModerationTable"; // adjust path if needed
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

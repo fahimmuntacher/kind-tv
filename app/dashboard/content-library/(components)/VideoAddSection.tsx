@@ -101,7 +101,7 @@ export default function VideoAddSection() {
       thumbnail,
     };
 
-    console.log("FINAL PAYLOAD 👉", payload);
+    console.log("FINAL PAYLOAD", payload);
 
     if (source === "custom") simulateUpload();
   };

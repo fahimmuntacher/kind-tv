@@ -1,19 +1,13 @@
 import DashBoardLayout from "@/app/layouts/DashBoardLayout";
-import React from "react";
-import MultiSourceContent from "./(Components)/MultiSourceContent";
 
-import RecurringScheduleCard from "./(Components)/Recurring";
+import BroadcastSchedulerPage from "./(Components)/BroadcastSchedulerPage";
 
-const ContentScheduling = () => {
+export default function ContentScheduling() {
   return (
     <DashBoardLayout panelName="Content Scheduling">
-      <div className="py-6 px-4 sm:px-6 lg:px-8 mx-auto space-y-8">
-        <MultiSourceContent />
-        {/* <AnalyticsSuggestions /> */}
-        <RecurringScheduleCard></RecurringScheduleCard>
+      <div>
+        <BroadcastSchedulerPage></BroadcastSchedulerPage>
       </div>
     </DashBoardLayout>
   );
-};
-
-export default ContentScheduling;
+}

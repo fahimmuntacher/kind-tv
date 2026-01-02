@@ -1,0 +1,50 @@
+[
+  {
+    "id": "pl-101",
+    "title": "React Beginner Bootcamp",
+    "thumbnail": "/thumbnail.jpg",
+    "type": "playlist",
+    "totalDuration": 5400,
+    "videos": [
+      {
+        "id": "v-1",
+        "title": "Intro to React",
+        "duration": 600,
+        "thumbnail": "/thumbnail.jpg"
+      },
+      {
+        "id": "v-2",
+        "title": "JSX Explained",
+        "duration": 900,
+        "thumbnail": "/thumbnail.jpg"
+      },
+      {
+        "id": "v-3",
+        "title": "Components & Props",
+        "duration": 1200,
+        "thumbnail": "/thumbnail.jpg"
+      }
+    ]
+  },
+  {
+    "id": "pl-102",
+    "title": "Next.js App Router Series",
+    "thumbnail": "/thumbnail.jpg",
+    "type": "playlist",
+    "totalDuration": 3600,
+    "videos": [
+      {
+        "id": "v-4",
+        "title": "Routing Basics",
+        "duration": 800,
+        "thumbnail": "/thumbnail.jpg"
+      },
+      {
+        "id": "v-5",
+        "title": "Layouts & Pages",
+        "duration": 1400,
+        "thumbnail": "/thumbnail.jpg"
+      }
+    ]
+  }
+]
