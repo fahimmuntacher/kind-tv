@@ -150,7 +150,7 @@ export default function BroadcastCalendar({
               titleFormat: {
                 month: "short",
                 day: "numeric",
-                weekday: "short",
+                // weekday: "short",
               },
             },
             timeGridWeek: {

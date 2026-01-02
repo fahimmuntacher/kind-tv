@@ -23,14 +23,6 @@ type FormValues = {
   thumbnailFile?: FileList;
 };
 
-/* ======================= Helpers ======================= */
-
-// ✅ Extract YouTube ID
-function getYouTubeId(url: string) {
-  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-  return match?.[1] ?? null;
-}
-
 /* ======================= Component ======================= */
 
 export default function VideoAddSection() {
@@ -39,22 +31,25 @@ export default function VideoAddSection() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
 
-  const { register, handleSubmit, reset } = useForm<FormValues>();
+  const defaultValues: FormValues = {
+    title: "",
+    description: "",
+    videoUrl: "",
+    videoFile: undefined,
+    thumbnailFile: undefined,
+  };
 
-  /* ---------- Source Change (NO EFFECT) ---------- */
+  const { register, handleSubmit, reset } = useForm<FormValues>({
+    defaultValues,
+  });
+
+  /* ---------- Source Change ---------- */
   const handleSourceChange = (next: VideoSource) => {
     setSource(next);
+    reset(defaultValues);
     setThumbnail("/placeholder.png");
     setUploadProgress(0);
     setUploading(false);
-
-    reset({
-      title: "",
-      description: "",
-      videoUrl: "",
-      videoFile: undefined,
-      thumbnailFile: undefined,
-    });
   };
 
   /* ---------- Thumbnail Upload ---------- */
@@ -62,14 +57,6 @@ export default function VideoAddSection() {
     const file = e.target.files?.[0];
     if (!file) return;
     setThumbnail(URL.createObjectURL(file));
-  };
-
-  /* ---------- YouTube Thumbnail Auto Fetch ---------- */
-  const handleYouTubeUrlBlur = (url: string) => {
-    const id = getYouTubeId(url);
-    if (!id) return;
-
-    setThumbnail(`https://img.youtube.com/vi/${id}/hqdefault.jpg`);
   };
 
   /* ---------- Upload Progress Simulation ---------- */
@@ -119,9 +106,11 @@ export default function VideoAddSection() {
 
       <CardContent className="p-8 space-y-10">
         {/* Thumbnail */}
-        {source !== "vimeo" && (
+
+        {source === "custom" && (
           <div className="space-y-3">
             <Label>Video Thumbnail</Label>
+
             <div className="flex sm:flex-row flex-col-reverse gap-6 items-center">
               <div className="relative w-52 h-32 rounded-2xl overflow-hidden border">
                 <Image
@@ -132,14 +121,12 @@ export default function VideoAddSection() {
                 />
               </div>
 
-              {source === "custom" && (
-                <Input
-                  type="file"
-                  accept="image/*"
-                  {...register("thumbnailFile")}
-                  onChange={handleThumbnailUpload}
-                />
-              )}
+              <Input
+                type="file"
+                accept="image/*"
+                {...register("thumbnailFile")}
+                onChange={handleThumbnailUpload}
+              />
             </div>
           </div>
         )}
@@ -178,9 +165,6 @@ export default function VideoAddSection() {
             <Input
               placeholder="https://..."
               {...register("videoUrl", { required: true })}
-              onBlur={(e) =>
-                source === "youtube" && handleYouTubeUrlBlur(e.target.value)
-              }
             />
           )}
 
