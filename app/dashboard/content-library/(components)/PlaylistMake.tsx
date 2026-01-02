@@ -42,7 +42,6 @@ export default function PlaylistBuilder() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const [mode, setMode] = useState<PlaylistMode>("ordered");
-  const [showOptions, setShowOptions] = useState<string | null>(null);
 
   // Pagination
   const [page, setPage] = useState(1);

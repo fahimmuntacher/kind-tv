@@ -1,13 +1,13 @@
 import DashBoardLayout from "@/app/layouts/DashBoardLayout";
 import React from "react";
-import VideoAddSource from "./(components)/VideoMetadataCard";
 import PlaylistCreateSection from "./(components)/PlaylistMake";
+import VideoAddSection from "./(components)/VideoAddSection";
 
 const ContentLibrary = () => {
   return (
     <DashBoardLayout panelName="Content Library">
       <div className="flex flex-col space-y-16">
-        <VideoAddSource></VideoAddSource>
+        <VideoAddSection></VideoAddSection>
         <PlaylistCreateSection></PlaylistCreateSection>
       </div>
     </DashBoardLayout>

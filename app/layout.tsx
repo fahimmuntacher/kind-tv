@@ -8,8 +8,6 @@ const quicksand = Quicksand({
   display: "swap",
 });
 
-
-
 export const metadata: Metadata = {
   title: "🌈 Kind TV Children",
   description: "For your Kind children",
@@ -22,9 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${quicksand.className} antialiased`}>
-        {children}
-      </body>
+      <body className={`${quicksand.className} antialiased`}>{children}</body>
     </html>
   );
 }
