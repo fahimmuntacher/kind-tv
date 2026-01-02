@@ -18,11 +18,6 @@ export default function BroadcastSchedulerPage() {
     ]).then(([videos, playlists]) => setContent([...videos, ...playlists]));
   }, []);
 
-  /* Drag start from library */
-  const handleDragStart = (item: SchedulableContent) => {
-    dragItemRef.current = item;
-  };
-
   /* Event actions */
   const handleEventAdd = (event: EventInput) => {
     setEvents((prev: EventInput[]) => [...prev, event]);
@@ -30,9 +25,7 @@ export default function BroadcastSchedulerPage() {
     if (dragItemRef.current) {
       const draggedId = dragItemRef.current.id;
 
-      setContent(
-        (prev) => prev.filter((c) => c && c.id !== draggedId)
-      );
+      setContent((prev) => prev.filter((c) => c && c.id !== draggedId));
 
       dragItemRef.current = null;
     }
@@ -50,7 +43,7 @@ export default function BroadcastSchedulerPage() {
 
   return (
     <div className="flex h-[90vh] gap-4 overflow-hidden">
-      <ContentLibrary content={content} onDragStart={handleDragStart} />
+      {/* <ContentLibrary content={content} onDragStart={handleDragStart} /> */}
       <BroadcastCalendar
         events={events}
         onEventAdd={handleEventAdd}

@@ -1,32 +1,32 @@
 [
   {
     "id": "1",
-    "title": "Introduction to React",
+    "title": "Find the beautifyl things",
     "thumbnail": "/thumbnail.jpg"
   },
   {
     "id": "2",
-    "title": "React Hooks Explained",
+    "title": "The end of the world",
     "thumbnail": "/thumbnail.jpg"
   },
   {
     "id": "3",
-    "title": "Building UI with Tailwind",
+    "title": "Throw the mind",
     "thumbnail": "/thumbnail.jpg"
   },
   {
     "id": "4",
-    "title": "Next.js App Router Basics",
+    "title": "Breaking loop of bad habit",
     "thumbnail": "/thumbnail.jpg"
   },
   {
     "id": "5",
-    "title": "Next.js App Router Basics",
+    "title": "Hunny bunny cartoon",
     "thumbnail": "/thumbnail.jpg"
   },
   {
     "id": "6",
-    "title": "Next.js App Router Basics",
+    "title": "The rust ",
     "thumbnail": "/thumbnail.jpg"
   }
 ]
